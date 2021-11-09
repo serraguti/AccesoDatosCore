@@ -7,7 +7,7 @@ namespace AccesoDatos
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            LeerRegistros();
         }
 
         static void LeerRegistros()
@@ -34,10 +34,17 @@ namespace AccesoDatos
             //EL LECTOR TIENE UN METODO Read() QUE DEVUELVE
             //BOOLEAN Y LEERA LOS DATOS.
             //CADA VEZ QUE EJECUTAMOS Read() LEE UNA FILA
-            reader.Read();
+            //reader.Read();
             //PARA RECUPERAR LOS DATOS SE UTILIZA ["columna"]
-            String nombre = reader["DNOMBRE"].ToString();
-            Console.WriteLine(nombre);
+            //String nombre = reader["DNOMBRE"].ToString();
+            //Console.WriteLine(nombre);
+            //LEEMOS TODOS LOS REGISTROS
+            while (reader.Read())
+            {
+                String nombre = reader["DNOMBRE"].ToString();
+                String localidad = reader["LOC"].ToString();
+                Console.WriteLine(nombre + " - " + localidad);
+            }
             //CERRAMOS EL LECTOR Y LA CONEXION
             reader.Close();
             cn.Close();
