@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Data.SqlClient;
 using AccesoDatos.Models;
 
@@ -124,6 +123,33 @@ namespace AccesoDatos.Repositories
                 //TENEMOS QUE DEVOLVER UN OBJETO VACIO
                 return null;
             }
+        }
+
+        //QUE DEVOLVEMOS ESTA VEZ EN NUESTRO SELECT¿? VARIOS DEPARTAMENTOS
+        public List<Departamento> GetDepartamentos()
+        {
+            String sql = "SELECT * FROM DEPT";
+            this.com.CommandText = sql;
+            this.cn.Open();
+            this.reader = this.com.ExecuteReader();
+            //DICHOS DATOS, NECESITAMOS ALMACENARLOS EN UNA COLECCION
+            //INSTANCIAMOS UNA COLECCION
+            List<Departamento> departamentos = new List<Departamento>();
+            //EXTRAEMOS MULTIPLES DATOS
+            while (this.reader.Read())
+            {
+                //CREAMOS UN OBJETO POR CADA FILA DEL READER
+                Departamento departamento = new Departamento();
+                //ASIGNAMOS LOS VALORES
+                departamento.Numero = (int)this.reader["DEPT_NO"];
+                departamento.Nombre = this.reader["DNOMBRE"].ToString();
+                departamento.Localidad = this.reader["LOC"].ToString();
+                //AÑADIMOS CADA OBJETO A LA COLECCION
+                departamentos.Add(departamento);
+            }
+            this.reader.Close();
+            this.cn.Close();
+            return departamentos;
         }
     }
 }
