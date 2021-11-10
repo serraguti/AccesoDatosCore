@@ -10,7 +10,48 @@ namespace AccesoDatos
             //AccionRegistros();
             //EliminarDepartamento();
             //LeerRegistros();
-            GetEmpleadosDepartamento();
+            ModificarNombreSalas();
+        }
+
+        static void ModificarNombreSalas()
+        {
+            String cadenaconexion = @"Data Source=LOCALHOST;Initial Catalog=HOSPITAL;Persist Security Info=True;User ID=SA;Password=azure";
+            SqlConnection cn = new SqlConnection(cadenaconexion);
+            SqlCommand com = new SqlCommand();
+            SqlDataReader reader;
+            String sqlselect = "SELECT distinct SALA_COD, NOMBRE FROM SALA";
+            com.Connection = cn;
+            com.CommandText = sqlselect;
+            com.CommandType = System.Data.CommandType.Text;
+            cn.Open();
+            reader = com.ExecuteReader();
+            while (reader.Read())
+            {
+                String salacod = reader["SALA_COD"].ToString();
+                String nombre = reader["NOMBRE"].ToString();
+                Console.WriteLine("Id Sala: " + salacod + " - " + nombre);
+            }
+            //LIBERAMOS EL LECTOR
+            reader.Close();
+            //NECESITAMOS HACER OTRA CONSULTA, SI TUVIERAMOS PARAMETROS
+            //TAMBIEN TENDRIAMOS QUE LIMPIARLOS
+            //LA CONEXION PERMANECE ABIERTA MIENTRAS REALICEMOS CONSULTAS
+            String sqlupdate = "UPDATE SALA SET NOMBRE=@NOMBRE "
+                + " WHERE SALA_COD=@SALACOD";
+            //SIMPLEMENTE, CAMBIAMOS LA CONSULTA DEL COMANDO
+            com.CommandText = sqlupdate;
+            Console.WriteLine("Id de la sala a modificar");
+            int idsala = int.Parse(Console.ReadLine());
+            Console.WriteLine("Nuevo nombre de sala");
+            String newname = Console.ReadLine();
+            SqlParameter pamnombre = new SqlParameter("@NOMBRE", newname);
+            SqlParameter pamsalacod = new SqlParameter("@SALACOD", idsala);
+            com.Parameters.Add(pamnombre);
+            com.Parameters.Add(pamsalacod);
+            int modificados = com.ExecuteNonQuery();
+            cn.Close();
+            com.Parameters.Clear();
+            Console.WriteLine("Salas modificadas " + modificados);
         }
 
         static void GetEmpleadosDepartamento()
