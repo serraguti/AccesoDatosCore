@@ -7,9 +7,40 @@ namespace AccesoDatos
     {
         static void Main(string[] args)
         {
-            AccionRegistros();
-            EliminarDepartamento();
-            LeerRegistros();
+            //AccionRegistros();
+            //EliminarDepartamento();
+            //LeerRegistros();
+            GetEmpleadosDepartamento();
+        }
+
+        static void GetEmpleadosDepartamento()
+        {
+            String cadenaconexion = @"Data Source=LOCALHOST;Initial Catalog=HOSPITAL;Persist Security Info=True;User ID=SA;Password=azure";
+            SqlConnection cn = new SqlConnection(cadenaconexion);
+            SqlCommand com = new SqlCommand();
+            SqlDataReader reader;
+            String sql = "select apellido, oficio, salario from emp "
+                + " where dept_no=@numero";
+            Console.WriteLine("Introduzca número departamento");
+            int deptno = int.Parse(Console.ReadLine());
+            com.Connection = cn;
+            com.CommandText = sql;
+            com.CommandType = System.Data.CommandType.Text;
+            SqlParameter pamnumero = new SqlParameter("@numero", deptno);
+            com.Parameters.Add(pamnumero);
+            cn.Open();
+            reader = com.ExecuteReader();
+            while (reader.Read())
+            {
+                String apellido = reader["APELLIDO"].ToString();
+                String oficio = reader["OFICIO"].ToString();
+                String salario = reader["SALARIO"].ToString();
+                Console.WriteLine(apellido + ", Oficio: "
+                    + oficio + ", Salario: " + salario);
+            }
+            reader.Close();
+            cn.Close();
+            com.Parameters.Clear();
         }
 
         static void EliminarDepartamento()
