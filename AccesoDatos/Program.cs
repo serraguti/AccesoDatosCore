@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AccesoDatos.Models;
+using AccesoDatos.Repositories;
+using System;
 using System.Data.SqlClient;
 
 namespace AccesoDatos
@@ -7,10 +9,19 @@ namespace AccesoDatos
     {
         static void Main(string[] args)
         {
-            //AccionRegistros();
-            //EliminarDepartamento();
-            //LeerRegistros();
-            ModificarNombreSalas();
+            RepositoryDepartamentos repo = new RepositoryDepartamentos();
+            //NECESITAMOS RECUPERAR UN DEPARTAMENTO
+            Departamento departamento = repo.BuscarDepartamento(40);
+            //PARA SABER SI DEVUELVE O NO, PREGUNTAMOS
+            if (departamento == null)
+            {
+                Console.WriteLine("Departamento no encontrado");
+            }
+            else
+            {
+                Console.WriteLine(departamento.Numero + " - " + departamento.Nombre
+                    + " - " + departamento.Localidad);
+            }
         }
 
         static void ModificarNombreSalas()
